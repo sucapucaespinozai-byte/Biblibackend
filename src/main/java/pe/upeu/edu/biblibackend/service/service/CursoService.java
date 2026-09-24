@@ -11,4 +11,5 @@ public interface CursoService {
     Curso crearCurso(CursoRequestDTO dto);
     Curso actualizarCurso(Long id, CursoRequestDTO dto);
     void eliminarCurso(Long id);
+    List<Curso> buscarCursosPersonalizado(Long carreraId, Integer ciclo, Boolean conVacantes, String orden, String dir);
 }

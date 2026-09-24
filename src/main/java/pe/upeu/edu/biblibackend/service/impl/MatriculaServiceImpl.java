@@ -28,8 +28,18 @@ public class MatriculaServiceImpl implements  MatriculaService {
         Estudiante estudiante = estudianteRepository.findById(dto.getEstudianteId())
                 .orElseThrow(() -> new RecursoNoEncontradoException("Estudiante no encontrado con ID: " + dto.getEstudianteId()));
 
+        // Validación: Estudiante inactivo (RN-01)
         if (estudiante.getEstado() == 0) {
             throw new ReglaNegocioException("El estudiante se encuentra inactivo y no puede matricularse");
+        }
+
+        // Validación: Ya matriculado en el mismo periodo (RN-03)
+        boolean yaMatriculado = matriculaRepository.findAll().stream()
+                .anyMatch(m -> m.getEstudiante().getId().equals(dto.getEstudianteId())
+                        && m.getPeriodo().equals(dto.getPeriodo())
+                        && !"ANULADA".equals(m.getEstado()));
+        if (yaMatriculado) {
+            throw new ReglaNegocioException("El estudiante ya se encuentra matriculado en este periodo");
         }
 
         Matricula matricula = new Matricula();
@@ -47,6 +57,7 @@ public class MatriculaServiceImpl implements  MatriculaService {
             Curso curso = cursoRepository.findById(detDto.getCursoId())
                     .orElseThrow(() -> new RecursoNoEncontradoException("Curso no encontrado con ID: " + detDto.getCursoId()));
 
+            // Validación: Vacantes disponibles (RN-02)
             if (curso.getVacantes() <= 0) {
                 throw new ReglaNegocioException("El curso " + curso.getNombre() + " no tiene vacantes disponibles");
             }
@@ -66,6 +77,10 @@ public class MatriculaServiceImpl implements  MatriculaService {
 
             totalCreditos += curso.getCreditos();
             montoTotal = montoTotal.add(costoCurso);
+        }
+
+        if (totalCreditos > 20) {
+            throw new ReglaNegocioException("El total de créditos excede el límite permitido por periodo");
         }
 
         matricula.setTotalCreditos(totalCreditos);

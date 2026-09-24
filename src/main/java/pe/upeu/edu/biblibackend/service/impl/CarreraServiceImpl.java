@@ -1,4 +1,5 @@
 package pe.upeu.edu.biblibackend.service.impl;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,11 +38,18 @@ public class CarreraServiceImpl implements  CarreraService  {
     @Override
     @Transactional
     public CarreraResponseDTO crearCarrera(CarreraRequestDTO dto) {
-        if (carreraRepository.findByNombre(dto.getNombre()).isPresent()) {
+        String nombreTrimmed = dto.getNombre() != null ? dto.getNombre().trim() : "";
+
+        boolean existe = carreraRepository.findAll().stream()
+                .anyMatch(c -> c.getNombre() != null &&
+                        c.getNombre().trim().equalsIgnoreCase(nombreTrimmed));
+
+        if (existe) {
             throw new ReglaNegocioException("Ya existe una carrera con ese nombre");
         }
+
         Carrera carrera = new Carrera();
-        carrera.setNombre(dto.getNombre());
+        carrera.setNombre(dto.getNombre().trim());
         carrera.setDescripcion(dto.getDescripcion());
         carrera.setEstado(1);
 

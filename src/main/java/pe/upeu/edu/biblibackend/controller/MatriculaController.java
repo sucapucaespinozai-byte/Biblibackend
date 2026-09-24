@@ -13,9 +13,10 @@ import pe.upeu.edu.biblibackend.service.service.MatriculaService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/matriculas")
+@RequestMapping("/api/v1/matriculas")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:4200")
+
 public class MatriculaController {
 
     private final MatriculaService matriculaService;
@@ -35,7 +36,7 @@ public class MatriculaController {
         return ResponseEntity.ok(matriculaService.buscarPorId(id));
     }
 
-    @PutMapping("/{id}/anular")
+    @PatchMapping("/{id}/anular")
     public ResponseEntity<Void> anular(@PathVariable Long id) {
         matriculaService.anularMatricula(id);
         return ResponseEntity.noContent().build();

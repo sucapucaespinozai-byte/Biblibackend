@@ -12,7 +12,7 @@ import pe.upeu.edu.biblibackend.service.service.CarreraService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/carreras")
+@RequestMapping("/api/v1/carreras")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class CarreraController {

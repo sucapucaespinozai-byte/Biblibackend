@@ -35,12 +35,12 @@ public class GlobalExceptionHandler {
             ReglaNegocioException ex, HttpServletRequest request) {
         ErrorResponseDTO error = new ErrorResponseDTO(
                 LocalDateTime.now(),
-                HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                HttpStatus.CONFLICT.value(),
+                HttpStatus.CONFLICT.getReasonPhrase(),
                 ex.getMessage(),
                 request.getRequestURI()
         );
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

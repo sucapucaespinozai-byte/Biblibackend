@@ -10,7 +10,7 @@ import pe.upeu.edu.biblibackend.service.service.EstudianteService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/estudiantes")
+@RequestMapping("/api/v1/estudiantes")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class EstudianteController {

@@ -12,7 +12,9 @@ import pe.upeu.edu.biblibackend.repository.CarreraRepository;
 import pe.upeu.edu.biblibackend.repository.CursoRepository;
 import pe.upeu.edu.biblibackend.service.service.CursoService;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -76,5 +78,31 @@ public class CursoServiceImpl implements  CursoService {
     public void eliminarCurso(Long id) {
         Curso curso = buscarPorId(id);
         cursoRepository.delete(curso);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Curso> buscarCursosPersonalizado(Long carreraId, Integer ciclo, Boolean conVacantes, String orden, String dir) {
+        List<Curso> cursos = cursoRepository.findAll().stream()
+                .filter(c -> c.getCarrera() != null && c.getCarrera().getId().equals(carreraId))
+                .filter(c -> c.getCiclo().equals(ciclo))
+                .filter(c -> !conVacantes || c.getVacantes() > 0)
+                .collect(Collectors.toList());
+
+        Comparator<Curso> comparador = null;
+        if ("vacantes".equalsIgnoreCase(orden)) {
+            comparador = Comparator.comparing(Curso::getVacantes);
+        } else if ("nombre".equalsIgnoreCase(orden)) {
+            comparador = Comparator.comparing(Curso::getNombre);
+        }
+
+        if (comparador != null) {
+            if ("desc".equalsIgnoreCase(dir)) {
+                comparador = comparador.reversed();
+            }
+            cursos.sort(comparador);
+        }
+
+        return cursos;
     }
 }

@@ -12,7 +12,7 @@ import pe.upeu.edu.biblibackend.service.service.MatriculaService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/reportes")
+@RequestMapping("/api/v1/reportes")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class ReporteController {

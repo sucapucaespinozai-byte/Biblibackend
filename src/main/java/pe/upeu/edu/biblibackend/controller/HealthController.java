@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/health")
+@RequestMapping("/api/v1/health")
 @CrossOrigin(origins = "*")
 public class HealthController {
 
